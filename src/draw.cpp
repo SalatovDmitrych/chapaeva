@@ -4,10 +4,11 @@ void Game::draw()
 {
     window.clear(sf::Color::Green);
 
-    window.draw(backgroundSprite);
+    window.draw(tableSprite);
+    window.draw(boardSprite);
 
     for (int i = 0; i < objectsCount; i++)
-        window.draw(objects[i].getShape());
+        if (objects[i].onBoard()) window.draw(objects[i].getShape());
 
     window.display();
 }

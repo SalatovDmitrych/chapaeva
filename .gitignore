@@ -4,3 +4,4 @@ obj
 *.depend
 *.layout
 *.xml
+*.cscope_file_list

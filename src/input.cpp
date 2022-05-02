@@ -11,7 +11,7 @@ void kickSh(Shashka &sh, const sf::Vector2f &vec)
 {
     sf::Vector2f speed;
     speed = (vec - sh.getPos()) * -1.5f;
-    sh.setSpeed(speed);
+    sh.setVelocity(speed);
 }
 
 sf::Vector2f mousePos(const sf::RenderWindow &w)
@@ -25,17 +25,17 @@ void Game::lmbPressed()
     {
         for (int i = 0; i < objectsCount; i++)
         {
-            if (chooseSh(objects[i].getPos(), mousePos(window)) && objects[i].getSpeed() == sf::Vector2f(0, 0))
+            if (chooseSh(objects[i].getPos(), mousePos(window)) && objects[i].getVelocity() == sf::Vector2f(0, 0))
             {
                 currentSh = &objects[i];
-                currentSh->getShape().setOutlineColor(sf::Color::Yellow);
+                currentSh->choose();
             }
         }
 
     }
     else
     {
-        currentSh->setSide(currentSh->getSide());
+        currentSh->unchoose();
         kickSh(*currentSh, mousePos(window));
         currentSh = nullptr;
     }
@@ -44,7 +44,7 @@ void Game::lmbPressed()
 void Game::rmbPressed()
 {
     if (currentSh != nullptr)
-        currentSh->setSide(currentSh->getSide());
+        currentSh->unchoose();
 
     currentSh = nullptr;
 }
@@ -73,13 +73,10 @@ void Game::input()
         if (event.type == sf::Event::MouseButtonPressed)
         {
             if (event.mouseButton.button == sf::Mouse::Left)
-            {
                 lmbPressed();
-            }
-            else if (event.mouseButton.button == sf::Mouse::Right)
-            {
+
+            if (event.mouseButton.button == sf::Mouse::Right)
                 rmbPressed();
-            }
         }
     }
 }

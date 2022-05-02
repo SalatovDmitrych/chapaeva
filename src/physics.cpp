@@ -12,7 +12,7 @@ sf::Vector2f normalize(const sf::Vector2f &v)
     return sf::Vector2f(v.x * l, v.y * l);
 }
 
-float scalar(const sf::Vector2f &a, const sf::Vector2f &b)
+float dotProduct(const sf::Vector2f &a, const sf::Vector2f &b)
 {
     return a.x * b.x + a.y * b.y;
 }
@@ -26,23 +26,23 @@ bool checkCollision(const sf::Vector2f &a, const sf::Vector2f &b)
 
 void resolveCollision(Shashka &a, Shashka &b)
 {
-    sf::Vector2f rv(b.getSpeed() - a.getSpeed());
+    sf::Vector2f rv(b.getVelocity() - a.getVelocity());
 
     sf::Vector2f n = normalize(b.getPos() - a.getPos());
 
-    float spdAlongNormal = scalar(rv, n);
+    float velAlongNormal = dotProduct(rv, n);
 
-    if (spdAlongNormal > 0)
+    if (velAlongNormal > 0)
         return;
 
     float e = 0.3;
 
-    float j = -(1 + e) * spdAlongNormal;
+    float j = -(1 + e) * velAlongNormal;
     j /= 2;
 
     sf::Vector2f impulse = n * j;
 
-    a.setSpeed(a.getSpeed() - impulse);
+    a.setVelocity(a.getVelocity() - impulse);
 
-    b.setSpeed(b.getSpeed() + impulse);
+    b.setVelocity(b.getVelocity() + impulse);
 }

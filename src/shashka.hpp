@@ -1,39 +1,50 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-enum SIDE {WHITE, RED};
+enum Side {WHITE, RED};
 
-const float RADIUS = 20;
-const float FRICTION = 0.8f;
+constexpr float RADIUS = 20.0f;
+constexpr float FRICTION = 0.8f;
 
 class Shashka
 {
 private:
     sf::Vector2f pos;
 
-    sf::Vector2f speed;
+    sf::Vector2f velocity;
 
     sf::CircleShape shape;
 
-    SIDE side;
+    Side side;
+
+    bool thisOnBoard;
 
 public:
+    static int whitesCount;
+    static int redsCount;
 
     Shashka();
 
-    sf::CircleShape& getShape();
+    sf::CircleShape getShape() const;
 
-    void setSpeed(const sf::Vector2f &vec);
-    void setSpeed(const float x, const float y);
-    sf::Vector2f getSpeed() const;
+    void setVelocity(const sf::Vector2f &vec);
+    void setVelocity(const float x, const float y);
+    sf::Vector2f getVelocity() const;
 
     void setPos(const sf::Vector2f &vec);
     void setPos(const float x, const float y);
     sf::Vector2f getPos() const;
 
     //גûחûגאועסÿ םא ךאזהûי םמגûי ךאהנ
-    void update(float delta, Shashka *obj, int cnt);
+    void update(const float delta, Shashka * const obj, const int cnt);
 
-    SIDE getSide() const;
-    void setSide(SIDE side_);
+    Side getSide() const;
+    void setSide(const Side s);
+
+    bool inRect(const int left, const int right, const int top, const int bottom) const;
+    bool onBoard() const;
+    void putOnBoard();
+
+    void choose();
+    void unchoose();
 };

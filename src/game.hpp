@@ -2,21 +2,30 @@
 #include <SFML/Graphics.hpp>
 #include "shashka.hpp"
 
-const int objectsCount = 16;
+constexpr int objectsCount = 16;
+static_assert(objectsCount % 2 == 0);
 
 class Game
 {
 private:
     sf::RenderWindow window;
 
-    sf::Sprite backgroundSprite;
-    sf::Texture backgroundTexture;
+    sf::Sprite tableSprite;
+    sf::Texture tableTexture;
 
-    Shashka* currentSh = nullptr;
+    sf::Sprite boardSprite;
+    sf::Texture boardTexture;
+
+    Shashka* currentSh;
     Shashka objects[objectsCount];
 
+    int redLine;
+    int whiteLine;
+
+    void newGame(const int whiteLn, const int redLn);
+    void endGame();
     void input();
-    void update(float delta);
+    void update(const float delta);
     void draw();
     void lmbPressed();
     void rmbPressed();

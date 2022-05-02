@@ -8,13 +8,15 @@ Shashka::Shashka()
 
     side = WHITE;
 
-    speed.x = 0;
-    speed.y = 0;
+    velocity.x = 0;
+    velocity.y = 0;
 
     pos.x = 0;
     pos.y = 0;
 
     shape.setOrigin(RADIUS, RADIUS);
+
+    thisOnBoard = true;
 }
 
 void Shashka::setPos(const float x, const float y)
@@ -33,32 +35,32 @@ sf::Vector2f Shashka::getPos() const
     return pos;
 }
 
-void Shashka::setSpeed(const float x, const float y)
+void Shashka::setVelocity(const float x, const float y)
 {
-    speed.x = x;
-    speed.y = y;
+    velocity.x = x;
+    velocity.y = y;
 }
 
-void Shashka::setSpeed(const sf::Vector2f &vec)
+void Shashka::setVelocity(const sf::Vector2f &vec)
 {
-    speed = vec;
+    velocity = vec;
 }
 
-sf::Vector2f Shashka::getSpeed() const
+sf::Vector2f Shashka::getVelocity() const
 {
-    return speed;
+    return velocity;
 }
 
-sf::CircleShape& Shashka::getShape()
+sf::CircleShape Shashka::getShape() const
 {
     return shape;
 }
 
-void Shashka::update(float delta, Shashka *obj, int cnt)
+void Shashka::update(const float delta, Shashka * const obj, const int cnt)
 {
     for (int i = 0; i < cnt; i++)
     {
-        if (&obj[i] == this)
+        if (&obj[i] == this || !obj[i].onBoard())
             continue;
 
         if (checkCollision(pos, obj[i].getPos()))
@@ -68,30 +70,35 @@ void Shashka::update(float delta, Shashka *obj, int cnt)
     }
 
 
-    if (vecLen(speed) > 5 )
-    {
-        speed += -speed * FRICTION * delta;
-    }
+    if (vecLen(velocity) > 5 )
+        velocity -= velocity * FRICTION * delta;
     else
-    {
-        speed.x = 0;
-        speed.y = 0;
-    }
+        setVelocity(0, 0);
 
-    pos += speed * delta;
+
+    pos += velocity * delta;
 
     shape.setPosition(pos);
+
+    if (!inRect(200, 600, 200, 600))
+    {
+        thisOnBoard = false;
+        if (side == RED)
+            Shashka::redsCount -= 1;
+        else
+            Shashka::whitesCount -= 1;
+    }
 }
 
-SIDE Shashka::getSide() const
+Side Shashka::getSide() const
 {
     return side;
 }
 
-void Shashka::setSide(SIDE side_)
+void Shashka::setSide(const Side s)
 {
-    side = side_;
-    if (side_ == RED)
+    side = s;
+    if (s == RED)
     {
         shape.setFillColor(sf::Color::Red);
         shape.setOutlineColor(sf::Color::Red);
@@ -101,4 +108,32 @@ void Shashka::setSide(SIDE side_)
         shape.setFillColor(sf::Color::White);
         shape.setOutlineColor(sf::Color::White);
     }
+}
+
+bool Shashka::inRect(const int left, const int right, const int top, const int bottom) const
+{
+    return pos.x + RADIUS > left && pos.x - RADIUS < right && pos.y + RADIUS > top && pos.y - RADIUS < bottom;
+}
+
+bool Shashka::onBoard() const
+{
+    return thisOnBoard;
+}
+
+void Shashka::putOnBoard()
+{
+    thisOnBoard = true;
+}
+
+void Shashka::choose()
+{
+    shape.setOutlineColor(sf::Color::Yellow);
+}
+
+void Shashka::unchoose()
+{
+    if (side == RED)
+        shape.setOutlineColor(sf::Color::Red);
+    else
+        shape.setOutlineColor(sf::Color::White);
 }
