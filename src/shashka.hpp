@@ -19,6 +19,8 @@ private:
 
     bool thisOnBoard;
 
+    int whenThisOut; //С…РѕРґ РєРѕРіРґР° С€Р°С€РєР° РІС‹Р»РµС‚РµР»Р° Р·Р° РґРѕСЃРєСѓ
+
 public:
     static int whitesCount;
     static int redsCount;
@@ -35,14 +37,14 @@ public:
     void setPos(const float x, const float y);
     sf::Vector2f getPos() const;
 
-    //вызывается на каждый новый кадр
-    void update(const float delta, Shashka * const obj, const int cnt);
+    void update(const float delta, Shashka * const obj, const int cnt, const int currentMove);
 
     Side getSide() const;
     void setSide(const Side s);
 
     bool inRect(const int left, const int right, const int top, const int bottom) const;
     bool onBoard() const;
+    int whenOut() const;
     void putOnBoard();
 
     void choose();

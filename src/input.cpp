@@ -10,13 +10,8 @@ bool chooseSh(const sf::Vector2f &s, const sf::Vector2f &v)
 void kickSh(Shashka &sh, const sf::Vector2f &vec)
 {
     sf::Vector2f speed;
-    speed = (vec - sh.getPos()) * -1.5f;
+    speed = (vec - sh.getPos()) * -1.6f;
     sh.setVelocity(speed);
-}
-
-sf::Vector2f mousePos(const sf::RenderWindow &w)
-{
-    return w.mapPixelToCoords(sf::Mouse::getPosition(w));
 }
 
 void Game::lmbPressed()
@@ -25,19 +20,22 @@ void Game::lmbPressed()
     {
         for (int i = 0; i < objectsCount; i++)
         {
-            if (chooseSh(objects[i].getPos(), mousePos(window)) && objects[i].getVelocity() == sf::Vector2f(0, 0))
+            if (chooseSh(objects[i].getPos(), mousePos(window)) &&
+                    allChekersStop() &&
+                    objects[i].getSide() == currentSide)
             {
                 currentSh = &objects[i];
                 currentSh->choose();
             }
         }
-
     }
     else
     {
         currentSh->unchoose();
         kickSh(*currentSh, mousePos(window));
         currentSh = nullptr;
+
+        playerMadeMove = true;
     }
 }
 
@@ -78,6 +76,14 @@ void Game::input()
             if (event.mouseButton.button == sf::Mouse::Right)
                 rmbPressed();
         }
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::N) &&
+            sf::Keyboard::isKeyPressed(sf::Keyboard::E) &&
+            sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        currentSide = WHITE;
+        newGame(7, 0);
     }
 }
 

@@ -17,6 +17,7 @@ Shashka::Shashka()
     shape.setOrigin(RADIUS, RADIUS);
 
     thisOnBoard = true;
+    whenThisOut = 0;
 }
 
 void Shashka::setPos(const float x, const float y)
@@ -56,7 +57,7 @@ sf::CircleShape Shashka::getShape() const
     return shape;
 }
 
-void Shashka::update(const float delta, Shashka * const obj, const int cnt)
+void Shashka::update(const float delta, Shashka * const obj, const int cnt, const int currentMove)
 {
     for (int i = 0; i < cnt; i++)
     {
@@ -83,6 +84,7 @@ void Shashka::update(const float delta, Shashka * const obj, const int cnt)
     if (!inRect(200, 600, 200, 600))
     {
         thisOnBoard = false;
+        whenThisOut = currentMove;
         if (side == RED)
             Shashka::redsCount -= 1;
         else
@@ -112,7 +114,8 @@ void Shashka::setSide(const Side s)
 
 bool Shashka::inRect(const int left, const int right, const int top, const int bottom) const
 {
-    return pos.x + RADIUS > left && pos.x - RADIUS < right && pos.y + RADIUS > top && pos.y - RADIUS < bottom;
+    //return pos.x + RADIUS > left && pos.x - RADIUS < right && pos.y + RADIUS > top && pos.y - RADIUS < bottom;
+    return pos.x > left && pos.x < right && pos.y > top && pos.y < bottom;
 }
 
 bool Shashka::onBoard() const
@@ -136,4 +139,9 @@ void Shashka::unchoose()
         shape.setOutlineColor(sf::Color::Red);
     else
         shape.setOutlineColor(sf::Color::White);
+}
+
+int Shashka::whenOut() const
+{
+    return whenThisOut;
 }
